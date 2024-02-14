@@ -1,4 +1,5 @@
 # AIGTDet
+
 ### coco_env
 
 conda create -n coco_env python=3.9
@@ -41,19 +42,25 @@ conda activate allennlp_env
 
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 -i https://download.pytorch.org/whl/cu113
 
-pip install allennlp==2.10.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
-
-pip install allennlp-models==2.10.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
-
 (for windows)
 
 pip install jsonnetbin
+
+pip install allennlp==2.10.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip install allennlp-models==2.10.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 python .\extract_keywords.py --raw_dir "C:\Users\Dong\Desktop\donglz\Coh-MGT-Detection\data\gpt2\gpt2_test.jsonl"
 
 python .\construct_graph.py --kw_file_dir "C:\Users\Dong\Desktop\donglz\Coh-MGT-Detection\data\gpt2\gpt2_test_kws.jsonl"
 
 (for linux)
+
+conda install -c conda-forge jsonnet
+
+pip install allennlp==2.10.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip install allennlp-models==2.10.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 python extract_keywords.py --raw_dir "/root/autodl-tmp/Coh-MGT-Detection/data/gpt3.5-davinci3/gpt3.5-Mixed-davinci3/gpt3.5_mixed_1000_train.jsonl"
 
