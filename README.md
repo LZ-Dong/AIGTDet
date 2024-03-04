@@ -1,14 +1,16 @@
 # AIGTDet
 
-### coco_env
+### coco_env1
 
 conda create -n coco_env python=3.9
 
-conda activate coco_env
+conda activate coco_env1
 
-pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
+// pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
 
-pip install transformers
+pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 -i https://download.pytorch.org/whl/cu113
+
+pip install transformers==4.20.1
 
 pip install scikit-learn==1.1.1
 
