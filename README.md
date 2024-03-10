@@ -1,5 +1,23 @@
 # AIGTDet
 
+NOTE: cuda >= 11.3
+
+### spacy_env
+
+conda create -n scapy_env python=3.9
+
+Install spaCy 3.4.4 GPU from source
+
+https://spacy.io/usage
+
+https://github.com/explosion/spaCy/releases/tag/v3.4.4
+
+[End-to-end neural coref in spaCy](https://github.com/explosion/spaCy/discussions/11585)
+
+pip install spacy-experimental==0.6.2
+
+pip install https://github.com/explosion/spacy-experimental/releases/download/v0.6.1/en_coreference_web_trf-3.4.0a2-py3-none-any.whl
+
 ### coco_env1
 
 conda create -n coco_env python=3.9
