@@ -18,6 +18,10 @@ pip install spacy-experimental==0.6.2
 
 pip install https://github.com/explosion/spacy-experimental/releases/download/v0.6.1/en_coreference_web_trf-3.4.0a2-py3-none-any.whl
 
+install en_core_web_sm
+
+https://github.com/explosion/spacy-models/releases/tag/en_core_web_sm-3.4.1
+
 ### coco_env1
 
 conda create -n coco_env python=3.9
