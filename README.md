@@ -4,7 +4,7 @@ NOTE: cuda >= 11.3
 
 ### spacy_env
 
-conda create -n scapy_env python=3.9
+conda create -n spacy_env python=3.9
 
 Install spaCy 3.4.4 GPU from source
 
