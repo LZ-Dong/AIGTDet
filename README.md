@@ -14,6 +14,12 @@ https://spacy.io/usage
 
 https://github.com/explosion/spaCy/releases/tag/v3.4.4
 
+cd spaCy
+
+pip install -r requirements.txt
+
+pip install --no-build-isolation --editable '.[cuda11x]'
+
 [End-to-end neural coref in spaCy](https://github.com/explosion/spaCy/discussions/11585)
 
 pip install spacy-experimental==0.6.2
