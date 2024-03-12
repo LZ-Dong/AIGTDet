@@ -2,23 +2,29 @@
 
 NOTE: cuda >= 11.3
 
-### spacy_env
+## spacy_env
 
 conda create -n spacy_env python=3.9
 
 conda activate spacy_env
 
-Install spaCy 3.4.4 GPU from source
+### Install torch+cu113
+
+https://pytorch.org/get-started/previous-versions/
+
+pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+
+### Install spaCy 3.4.4 GPU
 
 https://spacy.io/usage
 
-https://github.com/explosion/spaCy/releases/tag/v3.4.4
+https://github.com/explosion/spaCy/discussions/11436
 
-cd spaCy
+pip install spacy==3.4.4
 
-pip install -r requirements.txt
+pip install cupy-cuda11x
 
-pip install --no-build-isolation --editable '.[cuda11x]'
+### Install spacy-experimental
 
 [End-to-end neural coref in spaCy](https://github.com/explosion/spaCy/discussions/11585)
 
@@ -26,17 +32,13 @@ pip install spacy-experimental==0.6.2
 
 pip install https://github.com/explosion/spacy-experimental/releases/download/v0.6.1/en_coreference_web_trf-3.4.0a2-py3-none-any.whl
 
-install en_core_web_sm
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.1/en_core_web_sm-3.4.1-py3-none-any.whl
 
-https://github.com/explosion/spacy-models/releases/tag/en_core_web_sm-3.4.1
-
-### coco_env1
+## coco_env
 
 conda create -n coco_env python=3.9
 
-conda activate coco_env1
-
-// pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu118
+conda activate coco_env
 
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 -i https://download.pytorch.org/whl/cu113
 
@@ -66,7 +68,7 @@ pip install ray[tune]
 
 python run_detector.py --output_dir ./my_output --model_type bert --do_train 1 --train_file ./data/gpt2/gpt2_500_train.jsonl --dev_file ./data/gpt2/gpt2_test.jsonl
 
-### allennlp_env
+## allennlp_env
 
 conda create -n allennlp_env python=3.8
 
