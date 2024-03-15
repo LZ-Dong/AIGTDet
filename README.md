@@ -66,8 +66,6 @@ pip install ray[tune]
 
 conda install packaging
 
-conda install -c nvidia cuda-nvcc
-
 git clone https://github.com/NVIDIA/apex
 
 cd apex
