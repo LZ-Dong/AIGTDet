@@ -174,7 +174,8 @@ class RobertaForSequenceClassification_RGCN(RobertaPreTrainedModel):
                 num_entities += 1
             if num_entities > 0:
                 # 文本有对应的语义图
-                G = dgl.DGLGraph().to(self.the_device)
+                # G = dgl.DGLGraph().to(self.the_device)
+                G = dgl.graph(([], [])).to(self.the_device)
                 # 添加节点
                 G.add_nodes(num_entities + 1)
                 # 添加实体关系边
@@ -202,7 +203,8 @@ class RobertaForSequenceClassification_RGCN(RobertaPreTrainedModel):
                     if i < num_entities:
                         G.nodes[[i]].data['h'] = node_features[i].unsqueeze(0)
                     elif i == num_entities:
-                        G.nodes[[i]].data['h'] = torch.randn(hidden_size).unsqueeze(0).to(self.the_device)
+                        # G.nodes[[i]].data['h'] = torch.randn(hidden_size).unsqueeze(0).to(self.the_device)
+                        G.nodes[[i]].data['h'] = sequence_output[batchi, 0, :].unsqueeze(0)
                 # add edge feature
                 edge_type = torch.from_numpy(np.array(edge_type)).to(self.the_device)
                 edge_norm = torch.ones(len(edge_list), device=self.the_device, dtype=torch.float32)
@@ -216,15 +218,16 @@ class RobertaForSequenceClassification_RGCN(RobertaPreTrainedModel):
                 graph_reps[batchi, :] = X[num_entities]
                 if torch.isnan(X[num_entities]).any():
                     print("GCN output contains NaN values!")
-                if torch.all(X[num_entities] == 0):
-                    print("GCN output are all zero!")
+                # if torch.all(X[num_entities] == 0):
+                #     print("GCN output are all zero!")
                 # print("0, X[num_entities]", X[num_entities])
             else:
                 # 如果没有图表示，添加随机特征
-                graph_reps[batchi, :] = torch.randn(hidden_size).to(self.the_device)
+                # graph_reps[batchi, :] = torch.randn(hidden_size).to(self.the_device)
+                graph_reps[batchi, :] = sequence_output[batchi, 0, :]
         whole_rep = torch.cat([sequence_output[:, 0, :], graph_reps], dim=-1)
         if torch.all(graph_reps == 0):
-            print("GCN output are all zero!")
+            print("GCN output in this batch are all zero!")
         if torch.isnan(whole_rep).any():
             print("Concatenated representation contains NaN values!")
         logits = self.classifier(whole_rep)
