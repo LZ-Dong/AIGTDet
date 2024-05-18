@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 import torch
 import json
 
-def load_data(file_path, max_length=512, max_nodes=10, max_edges=30):
+def load_data(file_path, max_length=512, max_nodes=50, max_edges=100):
     text_list = []
     label_list = []
     kw_pos_list = []

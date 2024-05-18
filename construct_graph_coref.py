@@ -1,7 +1,8 @@
 import sys
 import os
-script_dir = os.path.dirname(os.path.abspath(__file__)) 
-parent_dir = os.path.dirname(script_dir)  
+# os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
 sys.path.append(parent_dir)
 import json
 import nltk
@@ -161,18 +162,9 @@ def generate_rep_mask_based_on_graph(ent_nodes, sens, tokenizer):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--raw_dir",
-    type=str,
-    required=True,
-    help="The path of the input dataset.",
-)
-parser.add_argument(
-    "--output_dir",
-    type=str,
-    default="",
-    help="The path to the output dataset with graph.",
-)
+parser.add_argument("--gpu_id", type=int, default=0, help="Run on GPU to boost.")
+parser.add_argument("--raw_dir", type=str, required=True, help="The path of the input dataset.")
+parser.add_argument("--output_dir", type=str, default="", help="The path to the output dataset with graph.")
 args = parser.parse_args()
 
 if __name__ == "__main__":
@@ -184,7 +176,7 @@ if __name__ == "__main__":
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base", do_lower_case=False)
     max_seq_length = 512
     no_node = 0
-    spacy.prefer_gpu(3)
+    spacy.prefer_gpu(args.gpu_id)
     nlp = spacy.load("en_coreference_web_trf")
     with open(args.output_dir, "w", encoding="utf8") as outf:
         for idx, line in tqdm(enumerate(data)):

@@ -1,8 +1,11 @@
 import os
+# os.environ['CUDA_VISIBLE_DEVICES'] = '7'
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 import numpy as np
 import json
 import argparse
-from modeling_graph import RobertaForSequenceClassification_RGCN, RobertaForSequenceClassification
+from modeling_roberta import RobertaForSequenceClassification, RobertaForSequenceClassification_GCN_Mean
+from modeling_bert import BertForSequenceClassification, BertForSequenceClassification_GCN_Mean
 from utils_data import load_data, MyDataset
 from transformers import (
     AutoConfig,
@@ -17,15 +20,18 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train_data', type=str, default='OpenLLMText/Human_GPT2/train_coref.jsonl')
-    parser.add_argument('--valid_data', type=str, default='OpenLLMText/Human_GPT2/valid_coref.jsonl')
+    parser.add_argument('--type', type=str, default='baseline', help="baseline for baseline, mean for mean")
+    parser.add_argument('--train_data', type=str, default='data/data_GROVER/grover_10000_train_coref.jsonl')
+    parser.add_argument('--valid_data', type=str, default='data/data_GROVER/grover_test_coref.jsonl')
     parser.add_argument('--model', type=str, default='roberta-base')
-    parser.add_argument('--output_dir', type=str, default='experiments')
+    parser.add_argument('--custom_model', type=str, default='')
+    parser.add_argument('--output_dir', type=str, default='experiments/grover_test')
     parser.add_argument('--epoch', type=int, default=2)
     parser.add_argument('--lr', type=float, default=2e-5)
     parser.add_argument('--bs', type=int, default=16)
     parser.add_argument('--max_length', type=int, default=512)
     parser.add_argument('--seed', type=int, default=66, help='random seed')
+    parser.add_argument('--do_train', default=True, help="to train or not to train")
     args = parser.parse_args()
     return args
 
@@ -41,7 +47,20 @@ def main():
     # Load pretrained model and tokenizer
     config = AutoConfig.from_pretrained(args.model)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-    model = RobertaForSequenceClassification_RGCN.from_pretrained(args.model, config=config)
+    if(args.model == 'roberta-base' or args.model == 'roberta-large'):
+        if args.custom_model == '':
+            args.custom_model = args.model
+        if args.type == 'baseline':
+            model = RobertaForSequenceClassification.from_pretrained(args.custom_model, config=config)
+        elif args.type == 'mean':
+            model = RobertaForSequenceClassification_GCN_Mean.from_pretrained(args.custom_model, config=config)
+    if(args.model == 'bert-base-uncased'):
+        if args.custom_model == '':
+            args.custom_model = args.model
+        if args.type == 'baseline':
+            model = BertForSequenceClassification.from_pretrained(args.custom_model, config=config)
+        elif args.type == 'mean':
+            model = BertForSequenceClassification_GCN_Mean.from_pretrained(args.custom_model, config=config)
  
     # Load data
     train_data = load_data(args.train_data)
@@ -62,7 +81,7 @@ def main():
         preds = p.predictions[0] if isinstance(p.predictions, tuple) else p.predictions
         preds = np.argmax(preds, axis=1)
         labels = p.label_ids
-        precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='weighted')
+        precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='binary')
         acc = accuracy_score(labels, preds)
         return {
             'accuracy': acc,
@@ -73,7 +92,7 @@ def main():
 
     training_args = TrainingArguments(
             output_dir = args.output_dir,
-            do_train=True,
+            do_train=args.do_train,
             do_eval=True,
             do_predict=True,
             logging_strategy="steps",
